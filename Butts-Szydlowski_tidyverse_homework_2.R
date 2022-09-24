@@ -231,9 +231,9 @@ flights
 
 arr_delay = flights %>%
   filter(arr_delay > 0) %>%
-  select(year, arr_delay, origin) %>%
+  select(year, arr_delay, dest) %>%
   filter(year == 2013) %>%
-  rename(faa = origin)
+  rename(faa = dest)
 
 airport = airports %>%
   select(faa, name)
@@ -245,9 +245,23 @@ final3 = delayed %>%
   group_by(name) %>%
   summarize(count = n()) %>% 
   arrange(-count)
-final2
+final3
 
+##====================================ANSWER===============================## 
+## Hartsfield Jackson Atlanta International had the greatest number of delayed arriving flights ## 
+##=========================================================================##
 
 # Q: What is the manufacturer, model, year, and type of airplane that flew the 
 #    most flights in 2013 (only include planes with all relevant information)?
 #    How man flights was it?
+
+plane_join = left_join(flights, planes, by = c('tailnum', 'year'))
+plane_join
+
+dat_plane = plane_join %>%
+  select(year, flight, tailnum, manufacturer, model, type) %>%
+  filter(year == 2013) %>%
+  drop_na() %>% 
+  arrange(manufacturer)
+dat_plane
+
