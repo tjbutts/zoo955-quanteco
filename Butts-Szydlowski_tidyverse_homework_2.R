@@ -254,14 +254,24 @@ final3
 # Q: What is the manufacturer, model, year, and type of airplane that flew the 
 #    most flights in 2013 (only include planes with all relevant information)?
 #    How man flights was it?
-
-plane_join = left_join(flights, planes, by = c('tailnum', 'year'))
+planes2 = planes %>% rename(year_made = year)
+plane_join = left_join(flights, planes2, by = c('tailnum'))
 plane_join
 
 dat_plane = plane_join %>%
-  select(year, flight, tailnum, manufacturer, model, type) %>%
+  select(year, flight, tailnum, manufacturer, model, type, year_made) %>%
   filter(year == 2013) %>%
   drop_na() %>% 
   arrange(manufacturer)
 dat_plane
 
+final4 = dat_plane %>%
+  group_by(type, model, manufacturer, year_made) %>%
+  summarize(
+    count = n()) %>%
+  arrange(-count)
+final4
+
+##===============================ANSWER===========================## 
+## In 2013, the 2002 EMBRAER Fixed wing multi-enging (EMB-145LR) flew the most with a total of 7268 flights ## 
+##================================================================## 
